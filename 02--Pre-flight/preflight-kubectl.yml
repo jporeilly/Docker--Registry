@@ -1,0 +1,68 @@
+---
+# Switch to Ansible Controller
+# Setup kubectl for local user and root by copying from the cluster
+- name: Setup kubectl for 'installer' user on Ansible Controller
+  hosts: "{{ groups['installer'][0] }}"
+  become: true
+  become_user: "{{ lookup('env','USER') }}"
+  gather_facts: false
+  any_errors_fatal: true
+  vars:
+    src: "~/Packages/kubespray-release-2.20/artifacts"
+    dst: "~/.kube"
+  tags: kubeconfig
+  
+  tasks:
+    # Copy over kubectl to /usr/local/bin
+    - name: Copy kubectl to /usr/local/bin
+      command: sudo cp "{{ src }}/kubectl"  /usr/local/bin
+
+    # Check for ~/.kube directory
+    - name: Check for .kube directory
+      stat:
+       path: "{{ dst }}"
+      register: register_kube_check
+
+    # Create ~/.kube if doesn't exist
+    - name: Create .kube directory
+      file:
+        path: "{{ dst}}"
+        state: directory
+      when: not register_kube_check.stat.exists 
+
+    # Copy over admin.conf and change file name to config
+    - name: Copy admin.conf to .kube/config
+      copy:
+        src: "{{ src }}/admin.conf"
+        dest: "{{ dst }}/config"
+
+    # Test kubectl config
+    - name: Check kubectl connectivity from installer node to cluster
+      shell: "kubectl get nodes"
+      register: nodes
+      become: false
+
+    # Display the Nodes
+    - name: Show output from command --> kubectl get nodes
+      debug:
+        msg: "{{ nodes.stdout_lines }}"
+
+    # Test kubectl config
+    - name: Check kubectl connectivity from installer node to cluster
+      shell: "kubectl get pods -n kube-system"
+      register: pods
+      become: false
+
+    # Display Pods in kube-system
+    - name: Show output from command --> kubectl get pods -n kube-system
+      debug:
+        msg: "{{ pods.stdout_lines }}"      
+
+    # Check for Helm
+    - name: Check Helm version
+      shell: helm version
+      register: helm_version
+      ignore_errors: true
+      tags: 
+       - helm
+ 
