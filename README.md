@@ -1,5 +1,6 @@
 ## <font color='red'>`Docker Registry`</font>
-DataOps unlocks business value by operationalizing data management with automation and collaboration. Lumada DataOps helps you build your DataOps practice for more business agility with an intelligent data operations platform.
+Kubernetes deployments are based on a “pull” approach. 
+Hosting a private Docker registry alongside your Kubernetes cluster allows you to securely manage your Docker images while also providing quick deployment of your apps.
 
 #### <font color='red'>`Module 01 - Infrastructure` </font>
 * Configure SkyTap Lab environment
