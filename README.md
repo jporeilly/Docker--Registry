@@ -15,8 +15,11 @@ DataOps unlocks business value by operationalizing data management with automati
 * Run cluster.yml playbook
 
 #### `<font color='red'>`Module 03 - Docker Registry `</font>`
-* Kubenetes Dashboard
-* Portainer
+* Longhorn Storage
+* Certificates & Keys
+* Kubernetes Secrets
+* Docker Registry
+* Deploy App
 
 #### `<font color='red'>`Module 04 - Monitoring `</font>`
 * Kubenetes Dashboard
